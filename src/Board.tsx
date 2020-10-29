@@ -1,10 +1,12 @@
 import React from "react";
 import Square from "./Square"
 
+type Squares = (null | "X" | "O")[]
+
 class Board extends React.Component {
   state = { squares: Array(9).fill(null), xIsNext: true };
 
-  calculateWinner = (squares) => {
+  calculateWinner = (squares: Squares) => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
