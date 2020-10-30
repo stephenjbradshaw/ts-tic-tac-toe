@@ -1,11 +1,13 @@
 import React from "react";
 
+type SquareValue = null | "X" | "O";
+
 interface Props {
-  value: "X" | "O" | null;
-  onClick: () => void
+  value: SquareValue;
+  onClick: () => void;
 }
 
-const Square: React.FC<Props> = ({value, onClick}) => {
+const Square: React.FC<Props> = ({ value, onClick }) => {
   return (
     <button className="square" onClick={onClick}>
       {value}
