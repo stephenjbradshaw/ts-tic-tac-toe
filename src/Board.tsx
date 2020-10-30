@@ -1,17 +1,19 @@
 import React from "react";
 import Square from "./Square"
 
-type Squares = (null | "X" | "O")[]
+type SquareValue = (null | "X" | "O")
 
-interface BoardState  {
-  squares: Squares;
+interface State  {
+  squares: SquareValue[];
   xIsNext: boolean;
 }
 
-class Board extends React.Component<any, BoardState> {
-  state: BoardState = { squares: Array(9).fill(null), xIsNext: true };
+interface Props {}
 
-  calculateWinner = (squares: Squares) => {
+class Board extends React.Component<Props, State> {
+  state: State = { squares: Array(9).fill(null), xIsNext: true };
+
+  calculateWinner = (squares: SquareValue[]): SquareValue => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -31,14 +33,14 @@ class Board extends React.Component<any, BoardState> {
   return null;
 };
 
-  handleClick = (i: number) => {
+  handleClick = (i: number): void => {
     const squares = [...this.state.squares];
     if (this.calculateWinner(squares) || squares[i]) return;
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState((prevState) => ({ xIsNext: !prevState.xIsNext, squares }));
   };
 
-  renderSquare(i: number) {
+  renderSquare(i: number): JSX.Element {
     return (
       <Square
         value={this.state.squares[i]}
