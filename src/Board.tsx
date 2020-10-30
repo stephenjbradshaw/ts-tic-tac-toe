@@ -3,8 +3,13 @@ import Square from "./Square"
 
 type Squares = (null | "X" | "O")[]
 
-class Board extends React.Component {
-  state = { squares: Array(9).fill(null), xIsNext: true };
+interface BoardState  {
+  squares: Squares;
+  xIsNext: boolean;
+}
+
+class Board extends React.Component<any, BoardState> {
+  state: BoardState = { squares: Array(9).fill(null), xIsNext: true };
 
   calculateWinner = (squares: Squares) => {
   const lines = [
