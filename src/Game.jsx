@@ -1,72 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import Board from "./Board";
 
-class Game extends React.Component {
-  state = {
-    history: [{ squares: Array(9).fill(null) }],
-    stepNumber: 0,
-    xIsNext: true,
-  };
+const Game = () => {
+  const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
+  const [stepNumber, setStepNumber] = useState(0);
+  const [xIsNext, setXIsNext] = useState(true);
 
-  handleClick(i) {
-    const history = this.state.history;
+  const handleClick = (i) => {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? "X" : "O";
-    this.setState({
-      history: history.concat([{ squares }]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
-    });
-  }
+    squares[i] = xIsNext ? "X" : "O";
+    setHistory(history.concat([{ squares }]));
+    setStepNumber(history.length);
+    setXIsNext(!xIsNext);
+  };
 
-  jumpTo(step) {
-    this.setState({ stepNumber: step, xIsNext: step % 2 === 0 });
-  }
+  const jumpTo = (step) => {
+    setStepNumber(step);
+    setXIsNext(step % 2 === 0);
+  };
 
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+  const current = history[stepNumber];
+  const winner = calculateWinner(current.squares);
 
-    // I like how the tutorial stores the elements in a variable here, avoiding cluttering up the render method's return statement.
-    const moves = history.map((step, moveIndex) => {
-      const desc = moveIndex ? "Go to move #" + moveIndex : "go to game start";
-      return (
-        <li key={moveIndex}>
-          <button onClick={() => this.jumpTo(moveIndex)}>{desc}</button>
-        </li>
-      );
-    });
-
-    let status;
-    if (winner) {
-      status = "Winner: " + winner;
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
-    }
-
+  // I like how the tutorial stores the elements in a variable here, avoiding cluttering up the render method's return statement.
+  const moves = history.map((step, moveIndex) => {
+    const desc = moveIndex ? "Go to move #" + moveIndex : "go to game start";
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board
-            squares={current.squares}
-            onClick={(i) => {
-              this.handleClick(i);
-            }}
-          />
-        </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
-      </div>
+      <li key={moveIndex}>
+        <button onClick={() => jumpTo(moveIndex)}>{desc}</button>
+      </li>
     );
+  });
+
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
   }
-}
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board
+          squares={current.squares}
+          onClick={(i) => {
+            handleClick(i);
+          }}
+        />
+      </div>
+      <div className="game-info">
+        <div>{status}</div>
+        <ol>{moves}</ol>
+      </div>
+    </div>
+  );
+};
 
 export default Game;
 
