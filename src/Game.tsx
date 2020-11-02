@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import Board from "./Board";
 
-const Game = () => {
-  const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
+type SquareValue = null | "X" | "O";
+interface historyItem {
+  squares: SquareValue[];
+}
+
+const Game: React.FC = () => {
+  const [history, setHistory] = useState<historyItem[]>([
+    { squares: Array(9).fill(null) },
+  ]);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXIsNext] = useState(true);
 
-  const handleClick = (i) => {
+  const handleClick = (i: number): void => {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
@@ -18,7 +25,7 @@ const Game = () => {
     setXIsNext(!xIsNext);
   };
 
-  const jumpTo = (step) => {
+  const jumpTo = (step: number): void => {
     setStepNumber(step);
     setXIsNext(step % 2 === 0);
   };
@@ -36,7 +43,7 @@ const Game = () => {
     );
   });
 
-  let status;
+  let status: string;
   if (winner) {
     status = "Winner: " + winner;
   } else {
@@ -48,7 +55,7 @@ const Game = () => {
       <div className="game-board">
         <Board
           squares={current.squares}
-          onClick={(i) => {
+          onClick={(i: number): void => {
             handleClick(i);
           }}
         />
@@ -63,7 +70,7 @@ const Game = () => {
 
 export default Game;
 
-function calculateWinner(squares) {
+const calculateWinner = (squares: SquareValue[]): SquareValue => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -81,4 +88,4 @@ function calculateWinner(squares) {
     }
   }
   return null;
-}
+};
